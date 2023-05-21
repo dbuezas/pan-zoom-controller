@@ -1,4 +1,4 @@
-// js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/DigitalPTZ.ts
+// js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/digital-ptz.ts
 
 const MAX_ZOOM = 10;
 const LOCAL_STORAGE_KEY = "webrtc-digital-ptc:";
