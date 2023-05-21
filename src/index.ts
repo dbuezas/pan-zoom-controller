@@ -1,8 +1,7 @@
 import "./styles.css";
-import { ZoomController } from "./zoom-controller";
+import { DigitalPTZ } from "./DigitalPTZ";
 
-new ZoomController(
+new DigitalPTZ(
   document.querySelector(".player")!,
-  document.querySelector("#video")!,
-  { persist_key: "hola" }
+  document.querySelector("#video")!
 );

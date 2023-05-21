@@ -1,3 +1,4 @@
+// file generated from https://github.com/dbuezas/pan-zoom-controller
 const ONE_FINGER_DOUBLE_TAP_ZOOM_MS_THRESHOLD = 250;
 const STATE_IDLE = 0;
 const STATE_ONE_FINGER_PAN = 1;
@@ -321,4 +322,3 @@ export class ZoomController {
     this.videoEl.style.transform = this.transform.render();
   }
 }
-//# sourceMappingURL=zoom-controller.js.map

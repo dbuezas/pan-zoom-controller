@@ -1,3 +1,5 @@
+// js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/DigitalPTZ.ts
+
 const MAX_ZOOM = 10;
 const LOCAL_STORAGE_KEY = "webrtc-digital-ptc:";
 const ONE_FINGER_ZOOM_SPEED = 1 / 200; // 1 scale every 200px
@@ -11,7 +13,8 @@ const DEFAULT_OPTIONS = {
   touch_pan: true,
   touch_pinch_zoom: true,
   touch_double_tap_zoom: true,
-  persist_key: undefined,
+  persist_key: "",
+  persist: true,
 };
 
 const STATE_IDLE = 0;
@@ -23,14 +26,16 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
 class Transform {
-  persist_key?: string;
+  persist_key: string;
+  persist: boolean;
   scale = 1;
   x = 0;
   y = 0;
   videoRect?: DOMRect;
   containerRect?: DOMRect;
-  constructor(persist_key?: string) {
-    if (persist_key) this.persist_key = LOCAL_STORAGE_KEY + persist_key;
+  constructor(persist_key: string, persist: boolean) {
+    this.persist = persist;
+    this.persist_key = LOCAL_STORAGE_KEY + persist_key;
     this.loadPersistedTransform();
   }
   public updateRects(videoEl: HTMLVideoElement, containerEl: HTMLElement) {
@@ -108,26 +113,26 @@ class Transform {
   }
 
   loadPersistedTransform = () => {
-    const { persist_key } = this;
-    let transform = { x: 0, y: 0, scale: 1 };
-    if (!persist_key) return transform;
+    const { persist_key, persist } = this;
+    if (!persist) return;
     try {
       const loaded = JSON.parse(localStorage[persist_key]);
-      const isValid = [
-        loaded.scale || loaded.translate.x || loaded.translate.y,
-      ].every(Number.isFinite);
+      const isValid = [loaded.scale || loaded.x || loaded.y].every(
+        Number.isFinite
+      );
       if (!isValid) {
         throw new Error("Broken local storage");
       }
-      transform = loaded;
+      this.x = loaded.x;
+      this.y = loaded.y;
+      this.scale = loaded.scale;
     } catch (e) {
       delete localStorage[persist_key];
     }
-    return transform;
   };
 
   persistTransform = () => {
-    if (!this.persist_key) return;
+    if (!this.persist) return;
     const { x, y, scale } = this;
     localStorage[this.persist_key] = JSON.stringify({
       x,
@@ -145,10 +150,11 @@ type Options = {
   touch_pan?: boolean;
   touch_pinch_zoom?: boolean;
   touch_double_tap_zoom?: boolean;
-  persist_key?: string;
+  persist_key: string;
+  persist: boolean;
 };
 
-export class ZoomController {
+export class DigitalPTZ {
   lastTouches?: TouchList;
   lastMouse?: MouseEvent;
   lastTap = 0;
@@ -167,7 +173,10 @@ export class ZoomController {
     this.containerEl = containerEl;
     this.videoEl = videoEl;
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
-    this.transform = new Transform(this.options.persist_key);
+    this.transform = new Transform(
+      this.options.persist_key,
+      this.options.persist
+    );
     for (const [event, handler] of this.handlers) {
       this.containerEl.addEventListener(event, handler as any, {
         capture: true,
