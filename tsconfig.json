@@ -5,7 +5,7 @@
     "jsx": "preserve",
     "target": "ESNext",
     "esModuleInterop": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "allowJs": false,
     "lib": [
       "es6",
@@ -14,6 +14,6 @@
     "rootDir": "src",
     "moduleResolution": "node",
     "outDir": "transpiled",
-  
+
   }
 }
