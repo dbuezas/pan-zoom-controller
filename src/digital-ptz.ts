@@ -212,6 +212,8 @@ export class DigitalPTZ {
       this.state = STATE_ONE_FINGER_ZOOM;
     } else if (e.touches.length === 1 && !isQuickTap && touch_pan) {
       this.state = STATE_ONE_FINGER_PAN;
+    } else if (e.touches.length === 1 && !isQuickTap && touch_drag_zoom) {
+      // this also has to prevent default to avoid mousedown being triggered too.
     } else if (e.touches.length === 2 && touch_pinch_zoom) {
       this.state = STATE_TWO_FINGERS;
     } else {
