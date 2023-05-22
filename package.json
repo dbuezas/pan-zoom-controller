@@ -6,9 +6,10 @@
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html",
-    "tsc": "tsc"
+    "tsc": "tsc && node node_modules/.bin/yab transpiled --once"
   },
   "dependencies": {
+    "add-js-extension": "^1.0.4",
     "parcel-bundler": "^1.6.1"
   },
   "devDependencies": {

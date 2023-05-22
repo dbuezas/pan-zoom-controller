@@ -54,8 +54,6 @@ function startOneFingerPan({ containerEl, transform, render }: GestureParam) {
     const onTouchEnd = () =>
       containerEl.removeEventListener("touchmove", onTouchMove);
     containerEl.addEventListener("touchend", onTouchEnd, { once: true });
-    capture(downEvent);
-    return true;
   };
   containerEl.addEventListener("touchstart", onTouchStart);
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
@@ -64,7 +62,7 @@ function startOneFingerPan({ containerEl, transform, render }: GestureParam) {
 function startPinchZoom({ containerEl, transform, render }: GestureParam) {
   const onTouchStart = (downEvent: TouchEvent) => {
     const relevant = downEvent.touches.length === 2;
-    if (!relevant) return false;
+    if (!relevant) return;
 
     let lastTouches = downEvent.touches;
     const onTouchMove = (moveEvent: TouchEvent) => {
@@ -98,7 +96,6 @@ function startPinchZoom({ containerEl, transform, render }: GestureParam) {
     const onTouchEnd = () =>
       containerEl.removeEventListener("touchmove", onTouchMove);
     containerEl.addEventListener("touchend", onTouchEnd, { once: true });
-    return true;
   };
   containerEl.addEventListener("touchstart", onTouchStart);
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
@@ -114,10 +111,8 @@ function startTouchTapDragZoom({
     const isSecondTap = downEvent.timeStamp - lastTap < DBL_CLICK_MS;
     lastTap = downEvent.timeStamp;
     const relevant = downEvent.touches.length === 1 && isSecondTap;
-    if (!relevant) return false;
-
+    if (!relevant) return;
     capture(downEvent);
-    if (!relevant) return false;
     let lastTouchY = downEvent.touches[0].clientY;
     const onTouchMove = (moveEvent: TouchEvent) => {
       if (moveEvent.touches.length > 1) return;
@@ -127,12 +122,10 @@ function startTouchTapDragZoom({
       lastTouchY = currTouchY;
       render();
     };
-
     containerEl.addEventListener("touchmove", onTouchMove);
     const onTouchEnd = () =>
       containerEl.removeEventListener("touchmove", onTouchMove);
     containerEl.addEventListener("touchend", onTouchEnd, { once: true });
-    return true;
   };
   containerEl.addEventListener("touchstart", onTouchStart);
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
@@ -158,7 +151,7 @@ function startDoubleClickZoom({
   const onMouseDown = (downEvent: MouseEvent) => {
     const isSecondClick = downEvent.timeStamp - lastClick < DBL_CLICK_MS;
     lastClick = downEvent.timeStamp;
-    if (!isSecondClick) return false;
+    if (!isSecondClick) return;
     capture(downEvent);
     containerEl.addEventListener(
       "mouseup",
@@ -171,7 +164,6 @@ function startDoubleClickZoom({
       },
       { once: true }
     );
-    return true;
   };
   containerEl.addEventListener("mousedown", onMouseDown);
   return () => containerEl.removeEventListener("mousedown", onMouseDown);
@@ -181,11 +173,8 @@ function startMouseDragPan({ containerEl, transform, render }: GestureParam) {
   let lastClick = 0;
   const onMouseDown = (downEvent: MouseEvent) => {
     lastClick = downEvent.timeStamp;
-    capture(downEvent);
     let lastMouse = downEvent;
-    let moved = false;
     const onMouseMove = (moveEvent: MouseEvent) => {
-      moved = true;
       capture(moveEvent);
       const dx = moveEvent.x - lastMouse.x;
       const dy = moveEvent.y - lastMouse.y;
@@ -196,13 +185,11 @@ function startMouseDragPan({ containerEl, transform, render }: GestureParam) {
     containerEl.addEventListener("mousemove", onMouseMove);
     containerEl.addEventListener(
       "mouseup",
-      (e) => {
+      () => {
         containerEl.removeEventListener("mousemove", onMouseMove);
-        if (moved) capture(e);
       },
       { once: true }
     );
-    return true;
   };
   containerEl.addEventListener("mousedown", onMouseDown);
   return () => containerEl.removeEventListener("mousedown", onMouseDown);

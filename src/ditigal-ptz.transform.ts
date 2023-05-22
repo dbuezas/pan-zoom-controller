@@ -1,7 +1,9 @@
 // js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/digital-ptz.ts
 
-const PERSIST_KEY_PREFIX = "webrtc-digital-ptc:";
 import { MAX_ZOOM } from "./digital-ptz";
+
+const PERSIST_KEY_PREFIX = "webrtc-digital-ptc:";
+
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 type Settings = { persist_key: string; persist: boolean };
