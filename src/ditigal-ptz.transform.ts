@@ -1,10 +1,10 @@
 // js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/digital-ptz.ts
 
 const PERSIST_KEY_PREFIX = "webrtc-digital-ptc:";
-
+import { MAX_ZOOM } from "./digital-ptz";
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
-type Settings = { persist_key: string; persist: boolean; maxZoom: number };
+type Settings = { persist_key: string; persist: boolean };
 export class Transform {
   scale = 1;
   x = 0;
@@ -68,7 +68,7 @@ export class Transform {
     if (!this.containerRect || !this.videoRect) return;
     const oldScale = this.scale;
     this.scale *= zoom;
-    this.scale = clamp(this.scale, 1, this.settings.maxZoom);
+    this.scale = clamp(this.scale, 1, MAX_ZOOM);
     zoom = this.scale / oldScale;
 
     x = x - this.containerRect.x - this.containerRect.width / 2;
