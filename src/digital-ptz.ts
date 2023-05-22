@@ -17,10 +17,10 @@ export const MAX_ZOOM = 10;
 
 const DEFAULT_OPTIONS = {
   mouse_drag_pan: true,
-  mouse_wheel_zoom: true,
+  mouse_wheel_zoom: false,
   mouse_double_click_zoom: true,
   touch_tap_drag_zoom: true,
-  touch_drag_pan: true,
+  touch_drag_pan: false,
   touch_pinch_zoom: true,
   touch_double_tap_zoom: true,
   persist_key: "",
