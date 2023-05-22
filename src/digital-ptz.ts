@@ -1,7 +1,7 @@
 // js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/digital-ptz.ts
 
 import {
-  onWheel,
+  startMouseWheel,
   startDoubleClickZoom,
   startDoubleTapZoom,
   startMouseDragPan,
@@ -48,7 +48,7 @@ export class DigitalPTZ {
   resizeObserver: ResizeObserver;
   transform: Transform;
   options: Options;
-  handles: Function[] = [];
+  offHandles: Function[] = [];
 
   constructor(
     containerEl: HTMLElement,
@@ -63,24 +63,24 @@ export class DigitalPTZ {
       persist: this.options.persist,
     });
 
-    this.videoEl.addEventListener("loadedmetadata", this.recomputeRects);
-    this.resizeObserver = new ResizeObserver(this.recomputeRects);
-    this.resizeObserver.observe(this.containerEl);
-
     const o = this.options;
     const gestureParam = {
-      containerEl,
+      containerEl: this.containerEl,
       transform: this.transform,
       render: this.render,
     };
-    const h = this.handles;
+    const h = this.offHandles;
     if (o.mouse_drag_pan) h.push(startMouseDragPan(gestureParam));
-    if (o.mouse_wheel_zoom) h.push(onWheel(gestureParam));
+    if (o.mouse_wheel_zoom) h.push(startMouseWheel(gestureParam));
     if (o.mouse_double_click_zoom) h.push(startDoubleClickZoom(gestureParam));
     if (o.touch_double_tap_zoom) h.push(startDoubleTapZoom(gestureParam));
     if (o.touch_tap_drag_zoom) h.push(startTouchTapDragZoom(gestureParam));
     if (o.touch_drag_pan) h.push(startOneFingerPan(gestureParam));
     if (o.touch_pinch_zoom) h.push(startPinchZoom(gestureParam));
+
+    this.videoEl.addEventListener("loadedmetadata", this.recomputeRects);
+    this.resizeObserver = new ResizeObserver(this.recomputeRects);
+    this.resizeObserver.observe(this.containerEl);
 
     this.recomputeRects();
   }
@@ -92,7 +92,7 @@ export class DigitalPTZ {
   };
 
   destroy() {
-    for (const off of this.handles) off();
+    for (const off of this.offHandles) off();
     this.videoEl.removeEventListener("loadedmetadata", this.recomputeRects);
     this.resizeObserver.unobserve(this.containerEl);
   }

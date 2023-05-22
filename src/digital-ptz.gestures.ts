@@ -12,11 +12,7 @@ type GestureParam = {
   render: () => void;
 };
 
-export function startDoubleTapZoom({
-  containerEl,
-  transform,
-  render,
-}: GestureParam) {
+function startDoubleTapZoom({ containerEl, transform, render }: GestureParam) {
   let lastTap = 0;
   const onTouchStart = (downEvent: TouchEvent) => {
     const isSecondTap = downEvent.timeStamp - lastTap < DBL_CLICK_MS;
@@ -41,11 +37,7 @@ export function startDoubleTapZoom({
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
 }
 
-export function startOneFingerPan({
-  containerEl,
-  transform,
-  render,
-}: GestureParam) {
+function startOneFingerPan({ containerEl, transform, render }: GestureParam) {
   const onTouchStart = (downEvent: TouchEvent) => {
     if (downEvent.touches.length !== 1) return;
     let lastTouches = downEvent.touches;
@@ -69,11 +61,7 @@ export function startOneFingerPan({
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
 }
 
-export function startPinchZoom({
-  containerEl,
-  transform,
-  render,
-}: GestureParam) {
+function startPinchZoom({ containerEl, transform, render }: GestureParam) {
   const onTouchStart = (downEvent: TouchEvent) => {
     const relevant = downEvent.touches.length === 2;
     if (!relevant) return false;
@@ -116,7 +104,7 @@ export function startPinchZoom({
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
 }
 
-export function startTouchTapDragZoom({
+function startTouchTapDragZoom({
   containerEl,
   transform,
   render,
@@ -150,7 +138,7 @@ export function startTouchTapDragZoom({
   return () => containerEl.removeEventListener("touchstart", onTouchStart);
 }
 
-export function onWheel({ containerEl, transform, render }: GestureParam) {
+function startMouseWheel({ containerEl, transform, render }: GestureParam) {
   const onWheel = (e: WheelEvent) => {
     capture(e);
     const zoom = 1 - e.deltaY / 1000;
@@ -161,7 +149,7 @@ export function onWheel({ containerEl, transform, render }: GestureParam) {
   return () => containerEl.removeEventListener("wheel", onWheel);
 }
 
-export function startDoubleClickZoom({
+function startDoubleClickZoom({
   containerEl,
   transform,
   render,
@@ -189,11 +177,7 @@ export function startDoubleClickZoom({
   return () => containerEl.removeEventListener("mousedown", onMouseDown);
 }
 
-export function startMouseDragPan({
-  containerEl,
-  transform,
-  render,
-}: GestureParam) {
+function startMouseDragPan({ containerEl, transform, render }: GestureParam) {
   let lastClick = 0;
   const onMouseDown = (downEvent: MouseEvent) => {
     lastClick = downEvent.timeStamp;
@@ -215,7 +199,6 @@ export function startMouseDragPan({
       (e) => {
         containerEl.removeEventListener("mousemove", onMouseMove);
         if (moved) capture(e);
-        console.log(`moved`, moved);
       },
       { once: true }
     );
@@ -224,3 +207,13 @@ export function startMouseDragPan({
   containerEl.addEventListener("mousedown", onMouseDown);
   return () => containerEl.removeEventListener("mousedown", onMouseDown);
 }
+
+export {
+  startDoubleTapZoom,
+  startOneFingerPan,
+  startPinchZoom,
+  startTouchTapDragZoom,
+  startMouseWheel,
+  startDoubleClickZoom,
+  startMouseDragPan,
+};
