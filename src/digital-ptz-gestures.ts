@@ -1,5 +1,5 @@
 import { DBL_CLICK_MS, ONE_FINGER_ZOOM_SPEED } from "./digital-ptz";
-import { Transform } from "./ditigal-ptz.transform";
+import { Transform } from "./ditigal-ptz-transform";
 const capture = (e: Event) => {
   e.preventDefault();
   e.stopPropagation();
@@ -22,7 +22,13 @@ function startDoubleTapZoom({ containerEl, transform, render }: GestureParam) {
     if (!relevant) return;
     const onTouchEnd = (endEvent: TouchEvent) => {
       const isQuickRelease = endEvent.timeStamp - lastTap < DBL_CLICK_MS;
-      if (!isQuickRelease) return;
+      const didMove =
+        50 <
+        Math.hypot(
+          endEvent.changedTouches[0].clientX - downEvent.touches[0].clientX,
+          endEvent.changedTouches[0].clientY - downEvent.touches[0].clientY
+        );
+      if (!isQuickRelease || didMove) return;
       const zoom = transform.scale == 1 ? 2 : 0.01;
       transform.zoomAtCoords(
         zoom,

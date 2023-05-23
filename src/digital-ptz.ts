@@ -1,5 +1,4 @@
 // js version generated from https://github.com/dbuezas/pan-zoom-controller/blob/main/src/digital-ptz.ts
-
 import {
   startMouseWheel,
   startDoubleClickZoom,
@@ -8,8 +7,8 @@ import {
   startOneFingerPan,
   startPinchZoom,
   startTouchTapDragZoom,
-} from "./digital-ptz.gestures";
-import { Transform } from "./ditigal-ptz.transform";
+} from "./digital-ptz-gestures";
+import { Transform } from "./ditigal-ptz-transform";
 
 export const ONE_FINGER_ZOOM_SPEED = 1 / 200; // 1 scale every 200px
 export const DBL_CLICK_MS = 400;
