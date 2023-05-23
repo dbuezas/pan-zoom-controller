@@ -23,7 +23,7 @@ function startDoubleTapZoom({ containerEl, transform, render }: GestureParam) {
     const onTouchEnd = (endEvent: TouchEvent) => {
       const isQuickRelease = endEvent.timeStamp - lastTap < DBL_CLICK_MS;
       const didMove =
-        50 <
+        30 <
         Math.hypot(
           endEvent.changedTouches[0].clientX - downEvent.touches[0].clientX,
           endEvent.changedTouches[0].clientY - downEvent.touches[0].clientY
