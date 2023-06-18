@@ -39,9 +39,6 @@ type Options = {
 };
 
 export class DigitalPTZ {
-  lastTouches?: TouchList;
-  lastMouse?: MouseEvent;
-  lastTap = 0;
   containerEl: HTMLElement;
   videoEl: HTMLVideoElement;
   resizeObserver: ResizeObserver;

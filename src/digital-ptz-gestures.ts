@@ -131,7 +131,7 @@ function startDoubleClickZoom({
       transform.zoomAtCoords(zoom, upEvent.pageX, upEvent.pageY);
       render(true);
     };
-    containerEl.addEventListener("mouseup", onUp, { once: true });
+    window.addEventListener("mouseup", onUp, { once: true });
   };
   containerEl.addEventListener("mousedown", onDown);
   return () => containerEl.removeEventListener("mousedown", onDown);
@@ -159,7 +159,7 @@ function startGesturePan(
     };
     containerEl.addEventListener(moveName, onMove);
     const onUp = () => containerEl.removeEventListener(moveName, onMove);
-    containerEl.addEventListener(upName, onUp, { once: true });
+    window.addEventListener(upName, onUp, { once: true });
   };
   containerEl.addEventListener(downName, onDown);
   return () => containerEl.removeEventListener(downName, onDown);

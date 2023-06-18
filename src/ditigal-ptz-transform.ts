@@ -36,6 +36,9 @@ export class Transform {
       return;
     }
 
+    // When in full screen, and if the aspect ratio of the screen differs from that of the video,
+    // black bars will be shown either to the sides or above/below the video.
+    // This needs to be accounted for when panning, the code below keeps track of that.
     const screenAspectRatio =
       this.containerRect.width / this.containerRect.height;
     const videoAspectRatio = videoEl.videoWidth / videoEl.videoHeight;
@@ -63,6 +66,7 @@ export class Transform {
     }
   }
 
+  // dx,dy are deltas.
   public move(dx: number, dy: number) {
     if (!this.videoRect) return;
     const bound = (this.scale - 1) / 2;
