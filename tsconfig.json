@@ -3,17 +3,13 @@
     "strict": true,
     "module": "esnext",
     "jsx": "preserve",
-    "target": "ESNext",
+    "target": "ES2015",
     "esModuleInterop": true,
     "sourceMap": false,
     "allowJs": false,
-    "lib": [
-      "es6",
-      "dom"
-    ],
+    "lib": ["es6", "dom"],
     "rootDir": "src",
     "moduleResolution": "node",
-    "outDir": "transpiled",
-
+    "outDir": "transpiled"
   }
 }

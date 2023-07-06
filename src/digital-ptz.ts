@@ -165,7 +165,7 @@ function startTouchTapDragZoom({
   let fastClicks = 0;
   const onTouchStart = (downEvent: TouchEvent) => {
     const isFastClick =
-      downEvent.timeStamp - lastEvent?.timeStamp < DBL_CLICK_MS;
+      lastEvent && downEvent.timeStamp - lastEvent.timeStamp < DBL_CLICK_MS;
     if (!isFastClick) fastClicks = 0;
     fastClicks++;
     if (downEvent.touches.length > 1) fastClicks = 0;
