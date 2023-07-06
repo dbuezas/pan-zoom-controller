@@ -5,7 +5,7 @@ const DBL_CLICK_MS = 400;
 const MAX_ZOOM = 10;
 
 const DEFAULT_OPTIONS = {
-  touch_drag_pan: false,
+  touch_drag_pan: true,
   touch_tap_drag_zoom: true,
 
   mouse_drag_pan: true,
@@ -383,9 +383,7 @@ class Transform {
     if (!persist) return;
     try {
       const loaded = JSON.parse(localStorage[persist_key]);
-      const isValid = [loaded.scale || loaded.x || loaded.y].every(
-        Number.isFinite
-      );
+      const isValid = [loaded.scale, loaded.x, loaded.y].every(Number.isFinite);
       if (!isValid) {
         throw new Error("Broken local storage");
       }
