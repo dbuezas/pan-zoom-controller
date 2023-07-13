@@ -2,7 +2,8 @@ import "./styles.css";
 import { DigitalPTZ } from "./digital-ptz.js";
 new DigitalPTZ(
   document.querySelector(".player"),
-  document.querySelector("#video"),
+  document.querySelector(".player .video-transform"),
+  document.querySelector(".player .video-transform video"),
   {
     mouse_drag_pan: true,
     mouse_wheel_zoom: true,

@@ -31,6 +31,7 @@ type Options = {
 
 export class DigitalPTZ {
   containerEl: HTMLElement;
+  transformEl: HTMLElement;
   videoEl: HTMLVideoElement;
   resizeObserver: ResizeObserver;
   transform: Transform;
@@ -39,10 +40,12 @@ export class DigitalPTZ {
 
   constructor(
     containerEl: HTMLElement,
+    transformEl: HTMLElement,
     videoEl: HTMLVideoElement,
     options?: Options
   ) {
     this.containerEl = containerEl;
+    this.transformEl = transformEl;
     this.videoEl = videoEl;
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
     this.transform = new Transform({
@@ -86,12 +89,12 @@ export class DigitalPTZ {
   private render = (transition = false) => {
     if (transition) {
       // transition is used to animate dbl click zoom
-      this.videoEl.style.transition = "transform 200ms";
+      this.transformEl.style.transition = "transform 200ms";
       setTimeout(() => {
-        this.videoEl.style.transition = "";
+        this.transformEl.style.transition = "";
       }, 200);
     }
-    this.videoEl.style.transform = this.transform.render();
+    this.transformEl.style.transform = this.transform.render();
   };
 }
 
@@ -278,6 +281,29 @@ const clamp = (value: number, min: number, max: number) =>
 
 type Settings = { persist_key: string; persist: boolean };
 
+function getTransformedDimensions(video: HTMLVideoElement) {
+  const { videoWidth, videoHeight } = video;
+  if (!videoHeight || !videoWidth) return undefined;
+  var transform = window.getComputedStyle(video).getPropertyValue("transform");
+  const match = transform.match(/matrix\((.+)\)/);
+  if (!match?.[1]) return { videoWidth, videoHeight }; // the video isn't transformed
+  const matrixValues = match[1].split(", ").map(Number);
+  const matrix = new DOMMatrix(matrixValues);
+  const points = [
+    new DOMPoint(0, 0),
+    new DOMPoint(videoWidth, 0),
+    new DOMPoint(0, videoHeight),
+    new DOMPoint(videoWidth, videoHeight),
+  ].map((point) => point.matrixTransform(matrix));
+
+  const minX = Math.min(...points.map((point) => point.x));
+  const maxX = Math.max(...points.map((point) => point.x));
+  const minY = Math.min(...points.map((point) => point.y));
+  const maxY = Math.max(...points.map((point) => point.y));
+
+  return { videoWidth: maxX - minX, videoHeight: maxY - minY };
+}
+
 class Transform {
   scale = 1;
   x = 0;
@@ -301,7 +327,8 @@ class Transform {
       return;
     }
     this.containerRect = containerRect;
-    if (!videoEl.videoWidth) {
+    const transformed = getTransformedDimensions(videoEl);
+    if (!transformed) {
       // The video hasn't loaded yet.
       // Once it loads, the videometadata listener will call this function again.
       return;
@@ -312,7 +339,7 @@ class Transform {
     // This needs to be accounted for when panning, the code below keeps track of that.
     const screenAspectRatio =
       this.containerRect.width / this.containerRect.height;
-    const videoAspectRatio = videoEl.videoWidth / videoEl.videoHeight;
+    const videoAspectRatio = transformed.videoWidth / transformed.videoHeight;
 
     if (videoAspectRatio > screenAspectRatio) {
       // Black bars on the top and bottom

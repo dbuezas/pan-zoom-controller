@@ -9,8 +9,8 @@
     "tsc": "tsc",
     "add-extension-to-imports": "node node_modules/.bin/yab transpiled --once",
     "prettier": "prettier ./transpiled --write",
-    "copy1": "cp transpiled/*.js /Volumes/config/custom_components/webrtc/www",
-    "copy2": "cp transpiled/*.js ~/code/WebRTC/custom_components/webrtc/www",
+    "copy1": "rsync -av transpiled/*.js /Volumes/config/custom_components/webrtc/www",
+    "copy2": "rsync -av transpiled/*.js ~/code/WebRTC/custom_components/webrtc/www",
     "beep": "echo -en '\\007'"
   },
   "dependencies": {
